@@ -8,6 +8,9 @@ function App() {
   const [confidence, setConfidence] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // 🔑 AMBIL API URL DARI ENV VERCEL
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -27,15 +30,20 @@ function App() {
     formData.append("file", image);
 
     try {
-      const res = await fetch("http://localhost:8000/predict", {
+      const res = await fetch(`${API_URL}/predict`, {
         method: "POST",
         body: formData,
       });
 
+      if (!res.ok) {
+        throw new Error("Response not OK");
+      }
+
       const data = await res.json();
       setResult(data.prediction.replaceAll("_", " "));
-      setConfidence((data.confidence * 100));
+      setConfidence(data.confidence * 100);
     } catch (err) {
+      console.error(err);
       alert("Gagal terhubung ke backend");
     }
 
