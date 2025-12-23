@@ -8,10 +8,8 @@ function App() {
   const [confidence, setConfidence] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔑 AMBIL API URL DARI ENV VERCEL
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "https://kiayyy-leaf-disease-api.hf.space";
+  // 🔥 HARDCODE API (AMAN UNTUK TUGAS)
+  const API_URL = "https://kiayyy-leaf-disease-api.hf.space";
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -23,34 +21,37 @@ const API_URL =
     }
   };
 
- const handlePredict = async () => {
-  if (!image || !API_URL) {
-    alert("API belum siap");
-    return;
-  }
+  const handlePredict = async () => {
+    if (!image) {
+      alert("Silakan pilih gambar dulu");
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  const formData = new FormData();
-  formData.append("file", image);
+    const formData = new FormData();
+    formData.append("file", image);
 
-  try {
-    const res = await fetch(`${API_URL}/predict`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch(`${API_URL}/predict`, {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await res.json();
+      if (!res.ok) {
+        throw new Error("Backend error");
+      }
 
-    setResult(data.prediction.replaceAll("_", " "));
-    setConfidence(data.confidence * 100);
-  } catch (err) {
-    console.error(err);
-    alert("Gagal terhubung ke backend");
-  }
+      const data = await res.json();
+      setResult(data.prediction.replaceAll("_", " "));
+      setConfidence(data.confidence * 100);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal terhubung ke backend");
+    }
 
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
   return (
     <div className="container">
@@ -81,5 +82,3 @@ const API_URL =
 }
 
 export default App;
-
-
