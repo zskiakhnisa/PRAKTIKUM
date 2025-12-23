@@ -33,7 +33,7 @@ function App() {
     formData.append("file", image);
 
     try {
-      const res = await fetch(`${API_URL}/predict`, {
+      const res = await fetch(`${API_URL}/predict/`, {
         method: "POST",
         body: formData,
       });
@@ -82,3 +82,4 @@ function App() {
 }
 
 export default App;
+
