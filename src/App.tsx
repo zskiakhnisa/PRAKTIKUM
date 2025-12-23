@@ -10,6 +10,7 @@ function App() {
 
   // 🔑 AMBIL API URL DARI ENV VERCEL
   const API_URL = import.meta.env.VITE_API_URL;
+  console.log("API_URL =", API_URL);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -79,3 +80,4 @@ function App() {
 }
 
 export default App;
+
